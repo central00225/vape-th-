@@ -4,7 +4,7 @@ import { products as initialProducts } from './data/products'
 function Header({ cartCount, onToggleCart, q, setQ }){
   return (
     <header className="header">
-      <div className="brand">Vape Marketplace</div>
+      <div className="brand">Vape Abidjan</div>
       <input className="search" placeholder="Rechercher..." value={q} onChange={e=>setQ(e.target.value)} />
       <button className="cartBtn" onClick={onToggleCart}>Panier ({cartCount})</button>
     </header>
