@@ -23,6 +23,14 @@ function AgeGate(){
   function confirm(){
     try{ localStorage.setItem('ageVerified','true') }catch(e){}
     setShown(false)
+      {showAdmin && (
+        <div className="modal" onClick={()=>setShowAdmin(false)}>
+          <div className="modalContent" onClick={e=>e.stopPropagation()}>
+            <button className="close" onClick={()=>setShowAdmin(false)}>×</button>
+            <Admin onClose={()=>setShowAdmin(false)} />
+          </div>
+        </div>
+      )}
   }
   function deny(){
     window.location.href = 'https://www.google.com'
