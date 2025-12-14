@@ -4,4 +4,12 @@
     <loc>https://central00225.github.io/vape-th-/</loc>
     <priority>1.00</priority>
   </url>
+  <url>
+    <loc>https://central00225.github.io/vape-th-/legal.html</loc>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://central00225.github.io/vape-th-/privacy.html</loc>
+    <priority>0.80</priority>
+  </url>
 </urlset>
