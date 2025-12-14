@@ -13,6 +13,16 @@
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="canonical" href="https://central00225.github.io/vape-th-/" />
     <meta name="theme-color" content="#ffffff" />
+    <!-- Inline critical CSS (small subset to render header & layout quickly) -->
+    <style>
+      /* Critical: header and container */
+      .header{display:flex;gap:12px;align-items:center;padding:12px}
+      .brand{font-weight:700}
+      .search{flex:1;padding:6px;border-radius:6px}
+      .container{display:grid;grid-template-columns:220px 1fr;gap:18px;padding:12px;max-width:1100px;margin:0 auto}
+      @media (max-width:880px){ .container{grid-template-columns:1fr;padding:12px} }
+    </style>
+
     <!-- Structured data: basic ItemList for products (improves discovery) -->
     <script type="application/ld+json">
       {"@context":"https://schema.org","@type":"ItemList","name":"Vape Abidjan - Produits","itemListElement":[]}

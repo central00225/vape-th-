@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, Suspense } from 'react'
 import { products as initialProducts } from './data/products'
 
 function Header({ cartCount, onToggleCart, q, setQ }){
@@ -43,7 +43,11 @@ function AgeGate(){
 function ProductCard({ p, onView, onAdd }){
   return (
     <article className="card">
-      <div className="thumb">{p.category}</div>
+      <div className="thumb">
+        {p.image ? (
+          <img src={p.image} alt={p.title} loading="lazy" width="400" height="300" />
+        ) : p.category}
+      </div>
       <h4>{p.title}</h4>
       <div className="desc">{p.description}</div>
       <div className="row">
@@ -57,28 +61,7 @@ function ProductCard({ p, onView, onAdd }){
   )
 }
 
-function Cart({ cart, products, onClose, onRemove }){
-  const items = Object.entries(cart).map(([id,qty])=>({ ...products.find(p=>p.id===+id), qty }))
-  const total = items.reduce((s,i)=>s + i.price * i.qty, 0)
-  return (
-    <div className="modalInner">
-      <button className="close" onClick={onClose}>×</button>
-      <h3>Votre panier</h3>
-      {items.length===0 ? <p>Panier vide.</p> : (
-        <div>
-          {items.map(it=> (
-            <div key={it.id} className="cartRow">
-              <div>{it.title} × {it.qty}</div>
-              <div>€{(it.price*it.qty).toFixed(2)} <button className="btn ghost" onClick={()=>onRemove(it.id)}>Suppr</button></div>
-            </div>
-          ))}
-          <div className="cartTotal">Total: €{total.toFixed(2)}</div>
-          <div className="note">Checkout non intégré — voir README pour instructions Stripe.</div>
-        </div>
-      )}
-    </div>
-  )
-}
+const LazyCart = React.lazy(()=>import('./components/Cart'))
 
 export default function App(){
   const [q, setQ] = useState('')
@@ -133,8 +116,10 @@ export default function App(){
         {showCart && (
         <div className="modal" onClick={()=>setShowCart(false)}>
           <div className="modalContent" onClick={e=>e.stopPropagation()}>
-            <Cart cart={cart} products={initialProducts} onClose={()=>setShowCart(false)} onRemove={removeFromCart} />
-          </div>
+              <Suspense fallback={<div className="modalInner">Chargement...</div>}>
+                <LazyCart cart={cart} products={initialProducts} onClose={()=>setShowCart(false)} onRemove={removeFromCart} />
+              </Suspense>
+            </div>
         </div>
       )}
         <footer style={{textAlign:'center',padding:'18px 8px',color:'var(--muted)'}}>
