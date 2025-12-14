@@ -83,9 +83,23 @@ export default function App(){
   const [products, setProducts] = useState([])
   const [showAdmin, setShowAdmin] = useState(false)
 
-  useEffect(()=>{
-    fetch('/products.json').then(r=>r.json()).then(j=>setProducts(j)).catch(()=>setProducts([]))
-  },[])
+    // Load products and poll periodically so that changes
+    // pushed via the Admin interface propagate to other open
+    // clients without a full rebuild or manual refresh.
+    useEffect(()=>{
+      let cancelled = false
+      async function load(){
+        try{
+          const r = await fetch('/products.json')
+          if(!r.ok) throw new Error('fetch failed')
+          const j = await r.json()
+          if(!cancelled) setProducts(j)
+        }catch(e){ if(!cancelled) setProducts([]) }
+      }
+      load()
+      const id = setInterval(load, 30_000)
+      return ()=>{ cancelled = true; clearInterval(id) }
+    },[])
 
   useEffect(()=>{
     const onOpen = ()=> setShowAdmin(true)
