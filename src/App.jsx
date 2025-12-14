@@ -1,5 +1,5 @@
-import React, { useMemo, useState, Suspense } from 'react'
-import { products as initialProducts } from './data/products'
+import React, { useMemo, useState, Suspense, useEffect } from 'react'
+import Admin from './admin/Admin'
 
 function Header({ cartCount, onToggleCart, q, setQ }){
   return (
@@ -7,7 +7,10 @@ function Header({ cartCount, onToggleCart, q, setQ }){
       <div className="brand"><a href="/" aria-label="Accueil"><h1>Vape Abidjan</h1></a></div>
       <label htmlFor="search" className="visually-hidden">Rechercher</label>
       <input id="search" className="search" placeholder="Rechercher..." value={q} onChange={e=>setQ(e.target.value)} />
-      <button className="cartBtn" onClick={onToggleCart} aria-label={`Ouvrir le panier (${cartCount})`}>Panier ({cartCount})</button>
+      <div style={{display:'flex',gap:8,alignItems:'center'}}>
+        <button className="cartBtn" onClick={onToggleCart} aria-label={`Ouvrir le panier (${cartCount})`}>Panier ({cartCount})</button>
+        <button className="btn ghost" onClick={()=>{ document.dispatchEvent(new CustomEvent('openAdmin')) }}>Admin</button>
+      </div>
     </header>
   )
 }
@@ -69,16 +72,28 @@ export default function App(){
   const [cart, setCart] = useState({})
   const [view, setView] = useState(null)
   const [showCart, setShowCart] = useState(false)
+  const [products, setProducts] = useState([])
+  const [showAdmin, setShowAdmin] = useState(false)
 
-  const categories = useMemo(()=>['Toutes', ...Array.from(new Set(initialProducts.map(p=>p.category)) )], [])
+  useEffect(()=>{
+    fetch('/products.json').then(r=>r.json()).then(j=>setProducts(j)).catch(()=>setProducts([]))
+  },[])
 
-  const filtered = useMemo(()=> {
-    return initialProducts.filter(p=>{
+  useEffect(()=>{
+    const onOpen = ()=> setShowAdmin(true)
+    document.addEventListener('openAdmin', onOpen)
+    return ()=> document.removeEventListener('openAdmin', onOpen)
+  },[])
+
+    const categories = useMemo(()=>['Toutes', ...Array.from(new Set(products.map(p=>p.category)) )], [products])
+
+    const filtered = useMemo(()=> {
+      return products.filter(p=>{
       if(category && category!=='Toutes' && p.category!==category) return false
       if(q && !(p.title.toLowerCase().includes(q.toLowerCase()) || p.description.toLowerCase().includes(q.toLowerCase()))) return false
       return true
     })
-  }, [q, category])
+    }, [q, category, products])
 
   function addToCart(p){ setCart(s => ({ ...s, [p.id]: (s[p.id]||0)+1 })) }
   function removeFromCart(id){ setCart(s => { const copy = { ...s }; delete copy[id]; return copy }) }
@@ -117,8 +132,9 @@ export default function App(){
         <div className="modal" onClick={()=>setShowCart(false)}>
           <div className="modalContent" onClick={e=>e.stopPropagation()}>
               <Suspense fallback={<div className="modalInner">Chargement...</div>}>
-                <LazyCart cart={cart} products={initialProducts} onClose={()=>setShowCart(false)} onRemove={removeFromCart} />
+                  <LazyCart cart={cart} products={products} onClose={()=>setShowCart(false)} onRemove={removeFromCart} />
               </Suspense>
+            {showAdmin && <Admin onClose={()=>setShowAdmin(false)} />}
             </div>
         </div>
       )}

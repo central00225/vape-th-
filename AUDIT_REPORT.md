@@ -68,6 +68,13 @@ Prochaines améliorations recommandées (priorisées)
 - Ajouter tests d'accessibilité automatisés (axe-core) dans la CI.
 - Ajouter en-têtes de sécurité via hébergeur/CDN (CSP, HSTS).
 
+Update 14 Déc 2025 (admin): Ajout d'une interface Admin minimale accessible via le bouton "Admin" dans l'entête. Fonctionnalités:
+- Saisie d'un Personal Access Token GitHub (scope `repo`) pour s'authentifier.
+- Modification de `products.json` et commit direct sur la branche `main` (déploie automatiquement via GitHub Pages).
+- Upload d'images depuis l'appareil — images ajoutées sous `images/{filename}` dans le repo (URL: `https://central00225.github.io/vape-th-/images/{filename}`).
+
+Sécurité: solution MVP basée sur PAT côté client (stocké localement). Pour production, je recommande la mise en place d'un backend / OAuth App pour éviter d'exposer un token côté client.
+
 Notes & artefacts
 - Branch: `fix/seo-accessibility-quick-wins` (pushée sur le repo remote).
 - Patch: `/Users/cheick._.k/0001-chore-add-SEO-meta-robots-sitemap-accessibility-labe.patch`
