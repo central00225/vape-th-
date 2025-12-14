@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://central00225.github.io/vape-th-/sitemap.xml

@@ -4,9 +4,10 @@ import { products as initialProducts } from './data/products'
 function Header({ cartCount, onToggleCart, q, setQ }){
   return (
     <header className="header">
-      <div className="brand">Vape Abidjan</div>
-      <input className="search" placeholder="Rechercher..." value={q} onChange={e=>setQ(e.target.value)} />
-      <button className="cartBtn" onClick={onToggleCart}>Panier ({cartCount})</button>
+      <div className="brand"><a href="/" aria-label="Accueil"><h1>Vape Abidjan</h1></a></div>
+      <label htmlFor="search" className="visually-hidden">Rechercher</label>
+      <input id="search" className="search" placeholder="Rechercher..." value={q} onChange={e=>setQ(e.target.value)} />
+      <button className="cartBtn" onClick={onToggleCart} aria-label={`Ouvrir le panier (${cartCount})`}>Panier ({cartCount})</button>
     </header>
   )
 }

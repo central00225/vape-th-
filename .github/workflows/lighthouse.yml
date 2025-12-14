@@ -1,0 +1,18 @@
+name: Lighthouse Audit
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Lighthouse (public URL)
+        uses: treosh/lighthouse-ci-action@v8
+        with:
+          urls: 'https://central00225.github.io/vape-th-/'
+          uploadArtifacts: true
+          formats: 'json,html'
