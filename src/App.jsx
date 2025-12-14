@@ -12,6 +12,34 @@ function Header({ cartCount, onToggleCart, q, setQ }){
   )
 }
 
+function AgeGate(){
+  const [shown, setShown] = React.useState(()=>{
+    try { return localStorage.getItem('ageVerified') === 'true' ? false : true } catch(e){ return true }
+  })
+
+  function confirm(){
+    try{ localStorage.setItem('ageVerified','true') }catch(e){}
+    setShown(false)
+  }
+  function deny(){
+    window.location.href = 'https://www.google.com'
+  }
+
+  if(!shown) return null
+  return (
+    <div className="ageGate" role="dialog" aria-modal="true">
+      <div className="ageGateContent">
+        <h2>Vérification d'âge</h2>
+        <p>Vous devez avoir l'âge légal pour accéder à ce site. Confirmez que vous avez l'âge requis pour continuer.</p>
+        <div style={{display:'flex',gap:8,justifyContent:'center',marginTop:12}}>
+          <button className="btn ghost" onClick={deny}>Je n'ai pas l'âge</button>
+          <button className="btn primary" onClick={confirm}>J'ai l'âge requis</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function ProductCard({ p, onView, onAdd }){
   return (
     <article className="card">
@@ -74,6 +102,7 @@ export default function App(){
 
   return (
     <div className="wrap">
+      <AgeGate />
       <Header cartCount={Object.values(cart).reduce((a,b)=>a+b,0)} onToggleCart={()=>setShowCart(true)} q={q} setQ={setQ} />
       <main className="container">
         <aside className="filters">
@@ -101,13 +130,17 @@ export default function App(){
         </div>
       )}
 
-      {showCart && (
+        {showCart && (
         <div className="modal" onClick={()=>setShowCart(false)}>
           <div className="modalContent" onClick={e=>e.stopPropagation()}>
             <Cart cart={cart} products={initialProducts} onClose={()=>setShowCart(false)} onRemove={removeFromCart} />
           </div>
         </div>
       )}
+        <footer style={{textAlign:'center',padding:'18px 8px',color:'var(--muted)'}}>
+          <a href="/legal.html" style={{color:'inherit',marginRight:12}}>Mentions légales</a>
+          <a href="/privacy.html" style={{color:'inherit'}}>Politique de confidentialité</a>
+        </footer>
     </div>
   )
 }

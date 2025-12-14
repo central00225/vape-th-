@@ -84,4 +84,6 @@ Souhaitez-vous que je commence par :
 ---
 Rapport généré et ajouté à la branche `fix/seo-accessibility-quick-wins`.
 
+Update 14 Déc 2025: Ajout d'une vérification d'âge (AgeGate modal) et de pages statiques `legal.html` et `privacy.html`. La sitemap a été mise à jour pour inclure ces pages.
+
 — Fin du rapport
